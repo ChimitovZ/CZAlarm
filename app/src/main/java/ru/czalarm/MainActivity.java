@@ -20,8 +20,10 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
@@ -123,10 +125,15 @@ public final class MainActivity extends Activity {
         TextView date = text(this, date(today), 14, MUTED, "sans-serif");
         padding(date, 10, 0, 8, 0);
         top.addView(date, new LinearLayout.LayoutParams(0, -2, 1));
-        TextView sound = button(this, "Звук", CARD, PINE, 15);
-        sound.setContentDescription("Настройки звука будильника");
-        sound.setOnClickListener(view -> startActivity(new Intent(this, SoundSettingsActivity.class)));
-        top.addView(sound, -2, -2);
+        ImageButton settings = new ImageButton(this);
+        settings.setImageResource(R.drawable.ic_settings);
+        settings.setImageTintList(ColorStateList.valueOf(PINE));
+        settings.setScaleType(ImageView.ScaleType.CENTER);
+        settings.setContentDescription("Настройки");
+        settings.setTooltipText("Настройки");
+        surface(settings, CARD, 15, 0, true);
+        settings.setOnClickListener(this::showSettings);
+        top.addView(settings, dp(this, 48), dp(this, 48));
         content.addView(top, -1, -2);
         space(content, 13);
         content.addView(text(this, "Будильники", 35, INK, "sans-serif-medium"));
@@ -151,11 +158,14 @@ public final class MainActivity extends Activity {
         }
         space(content, 12);
         content.addView(week(alarms, today), -1, -2);
-        space(content, 12);
-        TextView updates = button(this, "Обновления", CARD, PINE, 15);
-        updates.setOnClickListener(view -> startActivity(new Intent(this, UpdateActivity.class)));
-        content.addView(updates, -1, -2);
         if (scrollY > 0) scroll.post(() -> scroll.scrollTo(0, scrollY));
+    }
+
+    private void showSettings(View anchor) {
+        PopupMenu menu = new PopupMenu(this, anchor, Gravity.END);
+        menu.getMenu().add("Звук").setIntent(new Intent(this, SoundSettingsActivity.class));
+        menu.getMenu().add("Обновления").setIntent(new Intent(this, UpdateActivity.class));
+        menu.show();
     }
 
     private LinearLayout alarmListHeader() {
