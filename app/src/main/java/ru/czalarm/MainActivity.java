@@ -151,6 +151,10 @@ public final class MainActivity extends Activity {
         }
         space(content, 12);
         content.addView(week(alarms, today), -1, -2);
+        space(content, 12);
+        TextView updates = button(this, "Обновления", CARD, PINE, 15);
+        updates.setOnClickListener(view -> startActivity(new Intent(this, UpdateActivity.class)));
+        content.addView(updates, -1, -2);
         if (scrollY > 0) scroll.post(() -> scroll.scrollTo(0, scrollY));
     }
 

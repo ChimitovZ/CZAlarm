@@ -1,4 +1,7 @@
 <resources>
     <string name="alarm_volume_level">%1$d из %2$d</string>
     <string name="countdown_seconds">Через %1$d сек</string>
+    <string name="current_version">Установлена версия %1$s</string>
+    <string name="update_available">Доступна версия %1$s</string>
+    <string name="update_downloaded">Версия %1$s готова к установке</string>
 </resources>
