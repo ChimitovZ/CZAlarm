@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.application' version '9.1.1'
+}
+
+android {
+    namespace = 'ru.czalarm'
+    compileSdk = 36
+    enableKotlin = false
+
+    defaultConfig {
+        applicationId = 'ru.czalarm'
+        minSdk = 26
+        targetSdk = 36
+        versionCode = 1
+        versionName = '1.0.0'
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}

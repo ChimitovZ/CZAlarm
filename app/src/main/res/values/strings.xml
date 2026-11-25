@@ -1,0 +1,4 @@
+<resources>
+    <string name="alarm_volume_level">%1$d из %2$d</string>
+    <string name="countdown_seconds">Через %1$d сек</string>
+</resources>
