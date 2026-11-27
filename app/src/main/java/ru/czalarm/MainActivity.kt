@@ -2,6 +2,7 @@ package ru.czalarm
 
 import android.Manifest
 import android.app.NotificationManager
+import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -11,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -126,6 +128,14 @@ class MainActivity : ComponentActivity() {
             needsFullScreenPermission(manager) ->
                 PermissionPrompt("Разрешить будильник поверх блокировки") {
                     startActivity(Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, app))
+                }
+            Build.VERSION.SDK_INT >= 29 && !Settings.canDrawOverlays(this) ->
+                PermissionPrompt("Показывать будильник поверх других приложений") {
+                    try {
+                        startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, app))
+                    } catch (_: ActivityNotFoundException) {
+                        Toast.makeText(this, "Настройка недоступна на этом устройстве", Toast.LENGTH_SHORT).show()
+                    }
                 }
             else -> null
         }

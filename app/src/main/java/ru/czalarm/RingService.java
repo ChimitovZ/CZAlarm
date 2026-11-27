@@ -1,5 +1,6 @@
 package ru.czalarm;
 
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -19,6 +20,8 @@ import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
+import android.provider.Settings;
+import android.util.Log;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -114,6 +117,7 @@ public final class RingService extends Service {
         }
         if (!watchingScreen) {
             beginRing();
+            showOnUnlockedScreen();
         }
         handler.removeCallbacks(timeout);
         handler.postDelayed(timeout, RING_LENGTH_MS);
@@ -148,6 +152,17 @@ public final class RingService extends Service {
 
     private void updateNotification() {
         getSystemService(NotificationManager.class).notify(NOTIFICATION_ID, notification());
+    }
+
+    private void showOnUnlockedScreen() {
+        if (!getSystemService(PowerManager.class).isInteractive()
+                || getSystemService(KeyguardManager.class).isKeyguardLocked()
+                || (Build.VERSION.SDK_INT >= 29 && !Settings.canDrawOverlays(this))) return;
+        try {
+            startActivity(screen(this, session));
+        } catch (SecurityException denied) {
+            Log.w("CZAlarm", "Could not open the alarm screen from the background", denied);
+        }
     }
 
     private void beginRing() {
